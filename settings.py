@@ -1,0 +1,5 @@
+WIDTH = 400
+HEIGHT = 400
+TITLE = 'Tic Tac Toe'
+
+FPS = 30
