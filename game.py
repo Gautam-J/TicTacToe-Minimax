@@ -48,8 +48,15 @@ class TicTacToe:
 
         mouseX, mouseY = self.getMousePosition()
         if self.mouseClicked:
-            print(f'[INFO] {time.time()} {self.currentPlayer} clicked at {mouseX = } {mouseY  = }')
-            print(self.states)
+            self.updateStates(mouseX, mouseY)
+
+    def updateStates(self, mouseX, mouseY):
+        j = mouseX // (s.HEIGHT // 3)
+        i = mouseY // (s.HEIGHT // 3)
+
+        if self.states[i][j] is None:
+            print(f'[INFO] {time.time()} {self.currentPlayer} clicked at {i = } {j = }')
+            self.states[i][j] = self.currentPlayer
             self.switchPlayerTurns()
 
     def render(self):
