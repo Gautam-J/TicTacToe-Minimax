@@ -49,12 +49,14 @@ class TicTacToe:
         mouseX, mouseY = self.getMousePosition()
         if self.mouseClicked:
             print(f'[INFO] {time.time()} {self.currentPlayer} clicked at {mouseX = } {mouseY  = }')
+            print(self.states)
             self.switchPlayerTurns()
 
     def render(self):
 
         self.screen.fill((255, 255, 255))
         self.drawGrid()
+        self.drawStates()
 
         pygame.display.update()
 
@@ -64,6 +66,25 @@ class TicTacToe:
         pygame.draw.line(self.screen, (0, 0, 0), (s.WIDTH * 2 // 3, 0), (s.WIDTH * 2 // 3, s.HEIGHT), 3)
         pygame.draw.line(self.screen, (0, 0, 0), (0, s.HEIGHT // 3), (s.WIDTH, s.HEIGHT // 3), 3)
         pygame.draw.line(self.screen, (0, 0, 0), (0, s.HEIGHT * 2 // 3), (s.WIDTH, s.HEIGHT * 2 // 3), 3)
+
+    def drawStates(self):
+
+        for i in range(3):
+            for j in range(3):
+                spot = self.states[i][j]
+                if spot is None:
+                    continue
+
+                x = (s.WIDTH // 3) * j + (s.WIDTH // 3) // 2
+                y = (s.HEIGHT // 3) * i + (s.HEIGHT // 3) // 2
+                r = (s.WIDTH // 3) // 4
+
+                if spot == 'X':
+                    pygame.draw.line(self.screen, (0, 0, 0), (x - r, y - r), (x + r, y + r), 2)
+                    pygame.draw.line(self.screen, (0, 0, 0), (x + r, y - r), (x - r, y + r), 2)
+
+                elif spot == 'O':
+                    pygame.draw.circle(self.screen, (0, 0, 0), (x, y), r, 1)
 
     def switchPlayerTurns(self):
 
