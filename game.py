@@ -146,11 +146,11 @@ class TicTacToe:
     def showGameoverScreen(self):
 
         if self.winner in self.players:
-            self.drawTextToScreen(f'{self.winner} won!', s.WIDTH // 2, s.HEIGHT // 3)
+            self.drawTextToScreen(f'{self.winner} won!', int(s.WIDTH * 0.5), int(s.HEIGHT * 0.25))
         else:
-            self.drawTextToScreen(f'{self.winner}!', s.WIDTH // 2, s.HEIGHT // 3)
+            self.drawTextToScreen(f'{self.winner}!', int(s.WIDTH * 0.5), int(s.HEIGHT * 0.25))
 
-        self.drawTextToScreen('Press any key to play again,\'q\' to quit ', s.WIDTH // 2, (s.HEIGHT * 2) // 3)
+        self.drawTextToScreen('Press any key to play again,\'q\' to quit ', int(s.WIDTH * 0.5), int(s.HEIGHT * 0.75))
 
         pygame.display.update()
 
@@ -163,17 +163,9 @@ class TicTacToe:
                     pressed = True
 
     def drawTextToScreen(self, text, x, y, size=18, color=(255, 0, 0)):
-        """Draws text to screen.
-        Args:
-            text (str): Text to be displayed.
-            size (int): Size of the text.
-            color (tuple): Color of the text.
-            x (int): x coordinate of the text.
-            y (int): y coordinate of the text.
-        """
 
         font = pygame.font.Font(pygame.font.match_font('Arial'), size)
-        textSurface = font.render(text, True, color)  # antialiasing
+        textSurface = font.render(text, True, color)
         textRect = textSurface.get_rect()
 
         textRect.centerx = x
