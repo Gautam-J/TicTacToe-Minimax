@@ -1,4 +1,5 @@
 import time
+import random
 import pygame
 import settings as s
 
@@ -19,7 +20,8 @@ class TicTacToe:
 
         self.states = [[None for _ in range(3)] for _ in range(3)]
         self.players = ['X', 'O']
-        self.currentPlayer = self.players[0]
+        self.currentPlayer = random.choice(self.players)
+        self.winner = None
 
         self.runGameLoop()
 
@@ -49,6 +51,7 @@ class TicTacToe:
         mouseX, mouseY = self.getMousePosition()
         if self.mouseClicked:
             self.updateStates(mouseX, mouseY)
+            self.checkWinner()
 
     def updateStates(self, mouseX, mouseY):
         j = mouseX // (s.HEIGHT // 3)
@@ -58,6 +61,10 @@ class TicTacToe:
             print(f'[INFO] {time.time()} {self.currentPlayer} clicked at {i = } {j = }')
             self.states[i][j] = self.currentPlayer
             self.switchPlayerTurns()
+
+    def checkWinner(self):
+        # refer js file
+        pass
 
     def render(self):
 
