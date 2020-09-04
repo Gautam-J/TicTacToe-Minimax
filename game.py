@@ -25,7 +25,7 @@ class TicTacToe:
             self.clock.tick(s.FPS)
             self.handleEvents()
             self.updateAttributes()
-            self.drawToScreen()
+            self.render()
 
     def handleEvents(self):
 
@@ -37,7 +37,16 @@ class TicTacToe:
     def updateAttributes(self):
         pass
 
-    def drawToScreen(self):
+    def render(self):
 
         self.screen.fill((255, 255, 255))
+        self.drawGrid()
+
         pygame.display.update()
+
+    def drawGrid(self):
+
+        pygame.draw.line(self.screen, (0, 0, 0), (s.WIDTH // 3, 0), (s.WIDTH // 3, s.HEIGHT), 3)
+        pygame.draw.line(self.screen, (0, 0, 0), (s.WIDTH * 2 // 3, 0), (s.WIDTH * 2 // 3, s.HEIGHT), 3)
+        pygame.draw.line(self.screen, (0, 0, 0), (0, s.HEIGHT // 3), (s.WIDTH, s.HEIGHT // 3), 3)
+        pygame.draw.line(self.screen, (0, 0, 0), (0, s.HEIGHT * 2 // 3), (s.WIDTH, s.HEIGHT * 2 // 3), 3)
