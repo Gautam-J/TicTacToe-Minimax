@@ -87,7 +87,7 @@ class TicTacToe:
                 if self.states[i][j] is None:
 
                     self.states[i][j] = self.players[0]
-                    score = self.minimax(0, False)
+                    score = self.minimax(0, float('-inf'), float('inf'), False)
                     self.states[i][j] = None
 
                     if score > bestScore:
@@ -96,7 +96,7 @@ class TicTacToe:
 
         self.states[optimizedI][optimizedJ] = self.currentPlayer
 
-    def minimax(self, depth, is_maximizing):
+    def minimax(self, depth, alpha, beta, is_maximizing):
         winner = self.checkWinner()
         if winner is not None:
             return self.scores[winner]
@@ -109,9 +109,14 @@ class TicTacToe:
                     if self.states[i][j] is None:
 
                         self.states[i][j] = self.players[0]
-                        score = self.minimax(depth + 1, False)
+                        score = self.minimax(depth + 1, alpha, beta, False)
                         self.states[i][j] = None
                         bestScore = max(score, bestScore)
+
+                        # alpha-beta pruning
+                        alpha = max(alpha, bestScore)
+                        if beta <= alpha:
+                            return bestScore
 
             return bestScore
 
@@ -123,9 +128,14 @@ class TicTacToe:
                     if self.states[i][j] is None:
 
                         self.states[i][j] = self.players[1]
-                        score = self.minimax(depth + 1, True)
+                        score = self.minimax(depth + 1, alpha, beta, True)
                         self.states[i][j] = None
                         bestScore = min(score, bestScore)
+
+                        # alpha-beta pruning
+                        beta = min(beta, bestScore)
+                        if beta <= alpha:
+                            return bestScore
 
             return bestScore
 
