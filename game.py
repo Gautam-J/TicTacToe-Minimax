@@ -1,4 +1,3 @@
-import time
 import random
 import pygame
 import settings as s
@@ -16,14 +15,25 @@ class TicTacToe:
         self.clock = pygame.time.Clock()
         self.isRunning = True
 
+        self.scores = {
+            'O': 10,
+            'X': -10,
+            'Tie': 0,
+        }
+
     def startNewGame(self):
 
         self.states = [[None for _ in range(3)] for _ in range(3)]
-        self.players = ['X', 'O']
+        self.players = ['O', 'X']  # 'O' is AI, 'X' is player
         self.currentPlayer = random.choice(self.players)
+        self.printCurrentPlayer()
         self.winner = None
 
         self.runGameLoop()
+
+    def printCurrentPlayer(self):
+        player = 'AI' if self.currentPlayer == 'O' else 'Human'
+        print(f'[INFO] {player}\'s turn...')
 
     def runGameLoop(self):
 
@@ -54,18 +64,76 @@ class TicTacToe:
 
     def updateAttributes(self):
 
+        if self.currentPlayer == self.players[0]:
+            self.bestMove()
+            self.winner = self.checkWinner()
+            self.switchPlayerTurns()
+
         mouseX, mouseY = self.getMousePosition()
+
         if self.mouseClicked:
             self.updateStates(mouseX, mouseY)
-            self.checkWinner()
+            self.winner = self.checkWinner()
             self.switchPlayerTurns()
+
+    def bestMove(self):
+        # TODO: Implement alpha-beta pruning
+
+        print('[INFO] Minimax algorithm running...')
+        bestScore = float('-inf')
+
+        for i in range(3):
+            for j in range(3):
+                if self.states[i][j] is None:
+
+                    self.states[i][j] = self.players[0]
+                    score = self.minimax(0, False)
+                    self.states[i][j] = None
+
+                    if score > bestScore:
+                        bestScore = score
+                        optimizedI, optimizedJ = i, j
+
+        self.states[optimizedI][optimizedJ] = self.currentPlayer
+
+    def minimax(self, depth, is_maximizing):
+        winner = self.checkWinner()
+        if winner is not None:
+            return self.scores[winner]
+
+        if is_maximizing:
+            bestScore = float('-inf')
+
+            for i in range(3):
+                for j in range(3):
+                    if self.states[i][j] is None:
+
+                        self.states[i][j] = self.players[0]
+                        score = self.minimax(depth + 1, False)
+                        self.states[i][j] = None
+                        bestScore = max(score, bestScore)
+
+            return bestScore
+
+        else:
+            bestScore = float('inf')
+
+            for i in range(3):
+                for j in range(3):
+                    if self.states[i][j] is None:
+
+                        self.states[i][j] = self.players[1]
+                        score = self.minimax(depth + 1, True)
+                        self.states[i][j] = None
+                        bestScore = min(score, bestScore)
+
+            return bestScore
 
     def updateStates(self, mouseX, mouseY):
         j = mouseX // (s.HEIGHT // 3)
         i = mouseY // (s.HEIGHT // 3)
 
         if self.states[i][j] is None:
-            print(f'[INFO] {time.time()} {self.currentPlayer} clicked at {i = } {j = }')
             self.states[i][j] = self.currentPlayer
 
     @staticmethod
@@ -73,23 +141,24 @@ class TicTacToe:
         return x is not None and x == y and y == z
 
     def checkWinner(self):
+        winner = None
 
         # horizontal
         for i in range(3):
             if self.allEquals(self.states[i][0], self.states[i][1], self.states[i][2]):
-                self.winner = self.states[i][0]
+                winner = self.states[i][0]
 
         # vertical
         for i in range(3):
             if self.allEquals(self.states[0][i], self.states[1][i], self.states[2][i]):
-                self.winner = self.states[0][i]
+                winner = self.states[0][i]
 
         # diagonal
         if self.allEquals(self.states[0][0], self.states[1][1], self.states[2][2]):
-            self.winner = self.states[0][0]
+            winner = self.states[0][0]
 
         if self.allEquals(self.states[2][0], self.states[1][1], self.states[0][2]):
-            self.winner = self.states[2][0]
+            winner = self.states[2][0]
 
         openSpots = 0
         for i in range(3):
@@ -97,8 +166,10 @@ class TicTacToe:
                 if self.states[i][j] is None:
                     openSpots += 1
 
-        if self.winner is None and openSpots == 0:
-            self.winner = 'Tie'
+        if winner is None and openSpots == 0:
+            winner = 'Tie'
+
+        return winner
 
     def render(self):
 
@@ -139,6 +210,7 @@ class TicTacToe:
         currentPlayerIndex = self.players.index(self.currentPlayer)
         nextPlayerIndex = (currentPlayerIndex + 1) % 2
         self.currentPlayer = self.players[nextPlayerIndex]
+        self.printCurrentPlayer()
 
     def getMousePosition(self):
         return pygame.mouse.get_pos()
