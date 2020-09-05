@@ -77,8 +77,6 @@ class TicTacToe:
             self.switchPlayerTurns()
 
     def bestMove(self):
-        # TODO: Implement alpha-beta pruning
-
         print('[INFO] Minimax algorithm running...')
         bestScore = float('-inf')
 
